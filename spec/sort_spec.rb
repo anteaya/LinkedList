@@ -9,4 +9,9 @@ require File.join(File.dirname(__FILE__), '..','lib', 'sort')
 
 describe Sort do
 
+  it "creates a duplicate of a List" do
+    sort = Sort.new(List.new(Node.new('shoes', Node.new('socks', Node.new('pants', Node.new('belt', Node.new('shirt', Node.new('tie', Node.new('jacket')))))))))
+    
+  end
+
 end
