@@ -21,9 +21,13 @@ class Node
   def insert_next(node)
     if the_next.respond_to?(:data)
       pushed_down_node = the_next
-      @next_node = Node.new(node, pushed_down_node)
+      @next_node = node
+      node.insert_next(pushed_down_node)
+      node
+    elsif node.respond_to?(:data)
+      @next_node = node
     else
-      @next_node = Node.new(node)
+      raise "You have to pass in a instance of Node as an argument"
     end
   end
 
