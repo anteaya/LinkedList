@@ -11,12 +11,13 @@ class List
   end
 
   def each
+    list = self
     evaluated_node = beginning_node
     while evaluated_node.respond_to?(:data)
       yield evaluated_node
       evaluated_node = evaluated_node.the_next
     end
-    return self
+    list
   end
 
   def size
@@ -57,46 +58,49 @@ class List
     cache
   end
 
-  def insert_beginning(new_beginning_or_location)
-    if new_beginning_or_location.respond_to?(:data)
-      new_beginning = new_beginning_or_location
-      if beginning_node.respond_to?(:data)
-        pushed_down_node = beginning_node
-        @first_node = new_beginning
-        new_beginning.next_node = pushed_down_node
-      else
-        @first_node = new_beginning
-      end
-    elsif new_beginning_or_location.respond_to?(:/)
-      location = new_beginning_or_location
-      node = locate_node(location)
-      new_list = List.new(node)
+  def insert_beginning!(new_beginning)
+    if beginning_node.respond_to?(:data)
+      pushed_down_node = beginning_node
+      @first_node = new_beginning
+      new_beginning.next_node = pushed_down_node
     else
-      puts "Hello from the else!"
+      @first_node = new_beginning
     end
   end
 
-  def remove_beginning
+  def reduce(location)
+    if location.respond_to?(:/) && location <= self.size
+      node = locate_node(location)
+      new_list = List.new(node)
+    else
+      raise "reduce needs the location of a node expressed as an integer"
+    end
+  end
+
+  def remove_beginning!
     removed_beginning = beginning_node
     @first_node = beginning_node.the_next
     removed_beginning
   end
 
-  def remove_end(location = nil)
+  def remove_end!
     list = self
-    if location == nil
-      location = list.size - 1
-      node = locate_node(location)
-      node.remove_next
-    else
-      repeats = (size - location)
-      node = locate_node(location)
-      repeats.times do
-        node.remove_next
-      end
+    location = list.size - 1
+    node = locate_node(location)
+    node.remove_next
+  end
+
+  def truncate_to_end(location)
+    list = self.dup
+    repeats = (size - location)
+    repeats.times do
+      remove_end!
     end
     list
   end
+
+
+
 
   def split
     list = self
@@ -120,12 +124,51 @@ class List
     end
   end
 
+  def merge(left, right)
+    result = List.new
+    while left.size != 0 || right.size != 0
+      if left.size == 0
+        while right.size != 0
+          result = result.insert_next(right.beginning_node) && right.remove_beginning
+        end
+        break
+      end
+      if right.size == 0
+        while left.size != 0
+          result = result.insert_next(left.beginning_node) && left.remove_beginning
+        end
+        break
+      end
+      if left.beginning_node.data < right.beginning_node.data
+        if result.beginning_node == nil
+          result = result.insert_beginning(left.beginning_node) && left.remove_beginning
+        else
+         result = result.insert_next(left.beginning_node) && left.remove_beginning
+        end
+      else
+        if result.beginning_node == nil
+          result = result.insert_beginning(right.beginning_node) && right.remove_beginning
+        else
+          result = result.insert_next(right.beginning_node) && right.remove_beginning
+        end
+      end
+    end
+    result  
+  end
+
   def sort
     duplicated_list = self.dup
-    if duplicated_list.size < 2
+    list_size = duplicated_list.size
+    if list_size < 2
+    elsif list_size == 2
+      if beginning_node.data > beginning_node.the_next.data
+        duplicated_list.swap
+      end
     else
-       left = (duplicated_list.size / 2)
-       #right
+      left, right = duplicated_list.split
+      left = left.sort
+      right = right.sort
+      result = merge(left, right)
     end
     duplicated_list
   end
