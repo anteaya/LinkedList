@@ -3,13 +3,13 @@ require File.join(File.dirname(__FILE__), 'spec_helper')
 describe List do
   include SpecHelper
 
-  it "#first finds the first node which has the value 'a'" do
+  it "#first returns the first node which has the value 'a'" do
     node = create_node(['a', 'antelope', 'a', 'tiger'])
     list = List.new(Node.new('elephant', node))
     list.first('a').object_id.should == node.object_id
   end
 
-  it "#all finds all nodes which have the value 'z'" do
+  it "#all returns an array of all the nodes which have the value 'z'" do
     array = []
     array[2] = Node.new('z')
     array[1] = Node.new('z', Node.new('platypus', array[2]))
