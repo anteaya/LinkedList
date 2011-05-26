@@ -51,7 +51,8 @@ class List
 
 # the first node is location 1 (one)
   def locate_node(location)
-    cache = self.beginning_node
+    list = self
+    cache = list.beginning_node
     (location - 1).times do
       cache = cache.the_next
     end
@@ -69,7 +70,8 @@ class List
   end
 
   def reduce(location)
-    if location.respond_to?(:/) && location <= self.size
+    list = self
+    if location.respond_to?(:/) && location <= list.size
       node = locate_node(location)
       new_list = List.new(node)
     else
@@ -84,7 +86,7 @@ class List
   end
 
   def remove_end!
-    list = self.dup
+    list = self.copy
     location = list.size - 1
     node = locate_node(location)
     node.remove_next
@@ -100,9 +102,10 @@ class List
   end
 
   def copy
-    duplicate = List.new(Node.new(self.beginning_node.data))
+    list = self
+    duplicate = List.new(Node.new(list.beginning_node.data))
     location = 1
-    self.each do |node|
+    list.each do |node|
       duplicate.locate_node(location).insert_next(Node.new(node.data))
       location += 1
     end
@@ -113,8 +116,8 @@ class List
   def split
     list = self
     location = list.size / 2
-    list_for_right = list.dup
-    list_for_left = list.dup
+    list_for_right = list.copy
+    list_for_left = list.copy
     right = list_for_right.reduce(location + 1) 
     left = list_for_left.truncate_to_end(location)
     [left, right]
