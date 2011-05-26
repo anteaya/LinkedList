@@ -90,6 +90,7 @@ describe List do
       array = %w/carrot tomato celery spinach/
       node = create_node(array)
       list = List.new(Node.new('eggplant', Node.new('beans', Node.new('peas', Node.new('potato', node)))))
+      before_id = list.object_id
       reduced_list = list.reduce(5)
       i = 0
         reduced_list.each do |x|
@@ -97,7 +98,7 @@ describe List do
           i += 1
         end
       i.should == 4
-      reduced_list.object_id.should_not == list.object_id
+      reduced_list.object_id.should_not == before_id
     end
 
     it "throws an error is argument is not an integer or if integer doesn't correspond to a node in the list" do
@@ -159,6 +160,7 @@ describe List do
     it "takes a list with a location argument, duplicates the list, removes the remaining nodes and returns the duplicate list" do
       array = %w/red orange yellow green blue indigo violet/
       list = List.new(create_node(array))
+      before_id = list.object_id
       returned_list = list.truncate_to_end(3)
       i = 0
       list.each do |x|
@@ -166,7 +168,7 @@ describe List do
         i += 1
       end
       i.should == 3
-      returned_list.object_id.should_not == list.object_id
+      returned_list.object_id.should_not == before_id
     end
   end
 end
