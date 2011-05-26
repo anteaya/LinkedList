@@ -84,7 +84,7 @@ class List
   end
 
   def remove_end!
-    list = self
+    list = self.dup
     location = list.size - 1
     node = locate_node(location)
     node.remove_next
@@ -99,24 +99,33 @@ class List
     list
   end
 
-
-
+  def copy
+    duplicate = List.new(Node.new(self.beginning_node.data))
+    location = 1
+    self.each do |node|
+      duplicate.locate_node(location).insert_next(Node.new(node.data))
+      location += 1
+    end
+    duplicate.remove_beginning!
+    duplicate
+  end
 
   def split
     list = self
     location = list.size / 2
-    new_list = list.dup
-    right = new_list.insert_beginning(location + 1)
-    left = new_list.remove_end(location)
+    list_for_right = list.dup
+    list_for_left = list.dup
+    right = list_for_right.reduce(location + 1) 
+    left = list_for_left.truncate_to_end(location)
     [left, right]
   end
 
-  def swap
+  def swap!
     list = self
     if list.size == 2
       new_beginning = list.beginning_node.the_next
-      list.remove_end
-      list.insert_beginning(new_beginning)
+      list.remove_end!
+      list.insert_beginning!(new_beginning)
     elsif list.size < 2
       list
     else
@@ -124,52 +133,5 @@ class List
     end
   end
 
-  def merge(left, right)
-    result = List.new
-    while left.size != 0 || right.size != 0
-      if left.size == 0
-        while right.size != 0
-          result = result.insert_next(right.beginning_node) && right.remove_beginning
-        end
-        break
-      end
-      if right.size == 0
-        while left.size != 0
-          result = result.insert_next(left.beginning_node) && left.remove_beginning
-        end
-        break
-      end
-      if left.beginning_node.data < right.beginning_node.data
-        if result.beginning_node == nil
-          result = result.insert_beginning(left.beginning_node) && left.remove_beginning
-        else
-         result = result.insert_next(left.beginning_node) && left.remove_beginning
-        end
-      else
-        if result.beginning_node == nil
-          result = result.insert_beginning(right.beginning_node) && right.remove_beginning
-        else
-          result = result.insert_next(right.beginning_node) && right.remove_beginning
-        end
-      end
-    end
-    result  
-  end
-
-  def sort
-    duplicated_list = self.dup
-    list_size = duplicated_list.size
-    if list_size < 2
-    elsif list_size == 2
-      if beginning_node.data > beginning_node.the_next.data
-        duplicated_list.swap
-      end
-    else
-      left, right = duplicated_list.split
-      left = left.sort
-      right = right.sort
-      result = merge(left, right)
-    end
-    duplicated_list
-  end
+ 
 end
