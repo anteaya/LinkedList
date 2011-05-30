@@ -15,8 +15,8 @@ describe DummyClass do
     array = ['dog', 'cat', 'bird', 'fish']
     nodes = @dummy_class.create_node(array)
     nodes.data.should == 'dog'
-    nodes.the_next.data.should == 'cat'
-    nodes.the_next.the_next.data.should == 'bird'
-    nodes.the_next.the_next.the_next.data.should == 'fish'
+    nodes.next_node.data.should == 'cat'
+    nodes.next_node.next_node.data.should == 'bird'
+    nodes.next_node.next_node.next_node.data.should == 'fish'
   end
 end
