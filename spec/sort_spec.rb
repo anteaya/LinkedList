@@ -9,7 +9,7 @@ describe List do
       list = List.new(Node.new('horse', node))
       before_id = list.object_id
       list.swap!
-      list.beginning_node.object_id.should == node.object_id
+      list.first_node.object_id.should == node.object_id
       i = 0
       list.each do |x|
         x.data.should == ['cat', 'horse'][i]
@@ -74,4 +74,95 @@ describe List do
       j.should == 4
     end
   end
+
+  context "#merge" do
+    it "takes two lists and returns one list" do
+      left = List.new(Node.new(8))
+      right = List.new(Node.new(4))
+      merged_list = List.new.merge(left, right)
+      merged_list.should be_an_instance_of(List)
+    end
+
+    it "takes the data from the nodes in the two lists and returns a list with sorted data" do
+      left = List.new(Node.new(5))
+      right = List.new(Node.new(2))
+      sorted_array = [2, 5]
+      merged_list = List.new.merge(left, right)
+      i = 0
+      merged_list.each do |node|
+        node.data.should == sorted_array[i]
+        i += 1
+      end
+      i.should == 2
+    end
+  end
+  
+  context "#sort" do
+    it "takes a list and returns a different list" do
+      list = List.new(Node.new('fizzingwhizzby'))
+      before_id = list.object_id
+      sorted_list = list.sort
+      sorted_list.object_id.should_not == before_id
+    end
+
+    it "sorts a list with one node" do
+      list = List.new(Node.new('the first element'))
+      sorted_list = list.sort
+      sorted_list.should be_an_instance_of(List)
+      sorted_list.first_node.data.should == 'the first element'
+    end
+
+    it "sorts a list with two nodes" do
+      two_nodes = [4, 2]
+      sorted_nodes = [2, 4]
+      list = List.new(create_node(two_nodes))
+      sorted_list = list.sort
+      i = 0
+      sorted_list.each do |node|
+        node.data.should == sorted_nodes[i]
+        i += 1
+      end
+      i.should == 2
+    end
+
+    it "sorts a list with 3 nodes" do
+      three_nodes = [6, 4, 2]
+      sorted_nodes = [2, 4, 6]
+      list = List.new(create_node(three_nodes))
+      sorted_list = list.sort
+      i = 0
+      sorted_list.each do |node|
+        node.data.should == sorted_nodes[i]
+        i += 1
+      end
+      i.should == 3
+    end
+
+    it "sorts a list with 4 nodes" do
+      four_nodes = [45, 101, 3, 76]
+      sorted_nodes = [3, 45, 76, 101]
+      list = List.new(create_node(four_nodes))
+      sorted_list = list.sort
+      i = 0
+      sorted_list.each do |node|
+        node.data.should == sorted_nodes[i]
+        i += 1
+      end
+      i.should == 4
+    end
+
+    it "sorts a list with 5 nodes" do
+      five_nodes = [78, 99, 2, 8, 5]
+      sorted_nodes = [2, 5, 8, 78, 99]
+      list = List.new(create_node(five_nodes))
+      sorted_list = list.sort
+      i = 0
+      sorted_list.each do |node|
+        node.data.should == sorted_nodes[i]
+        i += 1
+      end
+      i.should == 5
+    end
+  end
+
 end
