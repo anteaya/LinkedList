@@ -1,8 +1,8 @@
 class Node
-  attr_accessor :next_node
+  attr_accessor :next_node, :data
 
   def initialize(node_value, next_node = nil)
-    @node_value = node_value
+    @data = node_value
     if next_node.respond_to?(:data) || next_node == nil 
       @next_node = next_node
     else
@@ -10,17 +10,9 @@ class Node
     end
   end
 
-  def data
-    @node_value
-  end
-
-  def the_next
-    @next_node
-  end
-
   def insert_next(node)
-    if the_next.respond_to?(:data)
-      pushed_down_node = the_next
+    if next_node.respond_to?(:data)
+      pushed_down_node = next_node
       @next_node = node
       node.insert_next(pushed_down_node)
       node
@@ -32,8 +24,8 @@ class Node
   end
 
   def remove_next
-    removed_node = the_next
-    @next_node = the_next.the_next
+    removed_node = next_node
+    @next_node = next_node.next_node
     removed_node
   end
 
