@@ -163,6 +163,19 @@ describe List do
       end
       i.should == 5
     end
+
+    it "sorts a list with 13 nodes" do
+      thirteen_nodes = [9, 99, 555, 44, 5, 103, 102, 104, 78, 101, 45, 67, 34]
+      sorted_nodes = [5, 9, 34, 44, 45, 67, 78, 99, 101, 102, 103, 104, 555]
+      list = List.new(create_node(thirteen_nodes))
+      sorted_list = list.sort
+      i = 0
+      sorted_list.each do |node|
+        node.data.should == sorted_nodes[i]
+        i += 1
+      end
+      i.should == 13
+    end
   end
 
 end
