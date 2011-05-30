@@ -6,7 +6,7 @@ describe List do
   context "#new" do
     it "initialzes" do
       list = List.new
-      list.beginning_node.should == nil
+      list.first_node.should == nil
     end
 
     it "takes a node and returns a list" do
@@ -19,13 +19,13 @@ describe List do
   context "#beginning_node" do
     it "is nil if empty" do
       list = List.new
-      list.beginning_node == nil
+      list.first_node == nil
     end
 
     it "takes a list and returns the beginning node" do
       list = List.new(create_node(%w/lemon/))
-      list.beginning_node.should be_an_instance_of(Node)
-      list.beginning_node.data == 'lemon'
+      list.first_node.should be_an_instance_of(Node)
+      list.first_node.data == 'lemon'
     end
   end
 
@@ -74,14 +74,14 @@ describe List do
     it "inserts a beginning into a list without a beginning" do
       list = List.new
       list.insert_beginning!(create_node(['grapefruit']))
-      list.beginning_node.data.should == 'grapefruit'
+      list.first_node.data.should == 'grapefruit'
     end
 
     it "inserts a new beginning into a list with a beginning" do
       list = List.new(create_node(['apricot']))
       list.insert_beginning!(create_node(['kumquat']))
-      list.beginning_node.data.should == 'kumquat'
-      list.beginning_node.the_next.data.should == 'apricot'
+      list.first_node.data.should == 'kumquat'
+      list.first_node.next_node.data.should == 'apricot'
     end
   end
 
@@ -124,13 +124,13 @@ describe List do
     it "from List with one node" do
       list = List.new(create_node(['watermelon']))
       list.remove_beginning!
-      list.beginning_node.should == nil
+      list.first_node.should == nil
     end
 
     it "from List with more than one node" do
       list = List.new(create_node(['strawberry', 'lime']))
       list.remove_beginning!
-      list.beginning_node.data.should == 'lime'
+      list.first_node.data.should == 'lime'
     end
   end
 

@@ -1,21 +1,18 @@
 require File.join(File.dirname(__FILE__), 'node')
 
 class List
+  attr_accessor :first_node
   
   def initialize(first_node = nil)
     @first_node = first_node
   end
 
-  def beginning_node
-    @first_node		
-  end
-
   def each
     list = self
-    evaluated_node = beginning_node
+    evaluated_node = first_node
     while evaluated_node.respond_to?(:data)
       yield evaluated_node
-      evaluated_node = evaluated_node.the_next
+      evaluated_node = evaluated_node.next_node
     end
     list
   end
@@ -52,16 +49,16 @@ class List
 # the first node is location 1 (one)
   def locate_node(location)
     list = self
-    cache = list.beginning_node
+    cache = list.first_node
     (location - 1).times do
-      cache = cache.the_next
+      cache = cache.next_node
     end
     cache
   end
 
   def insert_beginning!(new_beginning)
-    if beginning_node.respond_to?(:data)
-      pushed_down_node = beginning_node
+    if first_node.respond_to?(:data)
+      pushed_down_node = first_node
       @first_node = new_beginning
       new_beginning.next_node = pushed_down_node
     else
@@ -80,8 +77,8 @@ class List
   end
 
   def remove_beginning!
-    removed_beginning = beginning_node
-    @first_node = beginning_node.the_next
+    removed_beginning = first_node
+    @first_node = first_node.next_node
     removed_beginning
   end
 
@@ -103,7 +100,7 @@ class List
 
   def copy
     list = self
-    duplicate = List.new(Node.new(list.beginning_node.data))
+    duplicate = List.new(Node.new(list.first_node.data))
     location = 1
     list.each do |node|
       duplicate.locate_node(location).insert_next(Node.new(node.data))
@@ -126,7 +123,7 @@ class List
   def swap!
     list = self
     if list.size == 2
-      new_beginning = list.beginning_node.the_next
+      new_beginning = list.first_node.next_node
       list.remove_end!
       list.insert_beginning!(new_beginning)
     elsif list.size < 2
@@ -136,5 +133,64 @@ class List
     end
   end
 
+  def merge(left, right)
+    result = List.new
+    while left.size != 0 || right.size != 0
+      if left.size == 0
+        if result.first_node == nil
+          result.first_node = Node.new(right.first_node.data)
+          right.remove_beginning!
+        else
+          result.locate_node(result.size).insert_next(Node.new(right.first_node.data))
+          right.remove_beginning!
+        end
+        if left.size == 0 && right.size == 0
+          break
+        end
+      end
+      if right.size == 0
+        if result.first_node == nil
+          result.first_node = Node.new(left.first_node.data)
+          left.remove_beginning!
+        else
+          result.locate_node(result.size).insert_next(Node.new(left.first_node.data))
+          left.remove_beginning!
+        end
+        if left.size == 0 && right.size == 0
+          break
+        end
+      end
+      if left.first_node.respond_to?(:data) && right.first_node.respond_to?(:data) && left.first_node.data < right.first_node.data
+        if result.first_node == nil
+          result.first_node = Node.new(left.first_node.data)
+          left.remove_beginning!
+        else
+          result.locate_node(result.size).insert_next(Node.new(left.first_node.data))
+          left.remove_beginning!
+        end
+      else
+        if result.first_node == nil
+          result.first_node = Node.new(right.first_node.data)
+          right.remove_beginning!
+        else
+          result.locate_node(result.size).insert_next(Node.new(right.first_node.data))
+          right.remove_beginning!
+        end
+      end
+    end
+    result
+  end
+  
+  def sort
+    list = self.copy
+    if list.size < 2
+      list
+    else
+     left, right = list.split
+     left = left.sort
+     right = right.sort
+     result = merge(left, right)
+    end
+  end
  
 end
