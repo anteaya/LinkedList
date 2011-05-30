@@ -160,13 +160,16 @@ class List
           break
         end
       end
-      if left.first_node.respond_to?(:data) && right.first_node.respond_to?(:data) && left.first_node.data < right.first_node.data
+      if left.first_node.respond_to?(:data) && right.first_node.respond_to?(:data) && left.first_node.data < right.first_node.data || right.size == 0
         if result.first_node == nil
           result.first_node = Node.new(left.first_node.data)
           left.remove_beginning!
         else
           result.locate_node(result.size).insert_next(Node.new(left.first_node.data))
           left.remove_beginning!
+        end
+        if left.size == 0 && right.size == 0
+          break
         end
       else
         if result.first_node == nil
@@ -175,6 +178,9 @@ class List
         else
           result.locate_node(result.size).insert_next(Node.new(right.first_node.data))
           right.remove_beginning!
+        end
+        if left.size == 0 && right.size == 0
+          break
         end
       end
     end
