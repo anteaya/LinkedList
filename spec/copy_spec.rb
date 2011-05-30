@@ -12,13 +12,17 @@ describe List do
       copied_list.should be_an_instance_of(List)
       copied_list.object_id.should_not == before_id
     end
-
-    it "takes a list and returns a copy that has the same length as the original" do
-      plants = %w/fern tree shrub flower weed grass/
-      list = List.new(create_node(plants))
-      list_length = list.size
+    
+    it "takes a list and returns a copy that has the same node values in the same relationship as the original" do
+      colours = %w/tan magenta cyan tangerine violet poppy/
+      list = List.new(create_node(colours))
       copied_list = list.copy
-      copied_list.size.should == list_length
+      i = 0
+      copied_list.each do |node|
+        node.data.should == colours[i]
+        i += 1
+      end
+      i.should == list.size
     end
   end
 end
