@@ -2,6 +2,10 @@ require File.join(File.dirname(__FILE__), 'spec_helper')
 
 describe List do
   include SpecHelper
+
+  array = []
+  i = 0
+  check_data = lambda {|x| x.data.should == array[i]; i += 1} 
   
   context "#new" do
     it "initialzes" do
@@ -30,14 +34,11 @@ describe List do
   end
 
   it "#each takes a list and returns the same list" do
-   fruits = %w/cherimoya avocado soursop persimmion citron/
-   list = List.new(create_node(fruits))
+   array = %w/cherimoya avocado soursop persimmion citron/
+   list = List.new(create_node(array))
    before_id = list.object_id
    i = 0
-   list.each do |x|
-     x.data.should == (fruits[i])
-     i += 1
-   end
+   list.each &check_data 
    i.should == 5
    list.object_id.should == before_id
   end
@@ -93,10 +94,7 @@ describe List do
       before_id = list.object_id
       reduced_list = list.reduce(5)
       i = 0
-        reduced_list.each do |x|
-          x.data.should == array[i]
-          i += 1
-        end
+      reduced_list.each &check_data
       i.should == 4
       reduced_list.object_id.should_not == before_id
     end
@@ -147,10 +145,7 @@ describe List do
       list = List.new(create_node(array))
       list.remove_end!
       i = 0
-      list.each do |x|
-        x.data.should == array[i]
-        i += 1
-      end
+      list.each &check_data
       i.should == 4
     end
 
@@ -163,10 +158,7 @@ describe List do
       before_id = list.object_id
       returned_list = list.truncate_to_end(3)
       i = 0
-      list.each do |x|
-        x.data.should == array[i]
-        i += 1
-      end
+      list.each &check_data
       i.should == 3
       returned_list.object_id.should_not == before_id
     end

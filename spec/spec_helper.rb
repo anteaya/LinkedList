@@ -13,5 +13,9 @@ module SpecHelper
     end
     nodes
   end
+  
+  array = []
+  i = 0
+  check_data = lambda {|x| x.data.should == array[i]; i += 1}
 
 end

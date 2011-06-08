@@ -3,6 +3,10 @@ require File.join(File.dirname(__FILE__), 'spec_helper')
 describe List do
   include SpecHelper
 
+  array = []
+  i = 0
+  check_data = lambda {|x| x.data.should == array[i]; i += 1} 
+
   context "#swap!" do
     it "takes a list of maximum size 2 and swaps the nodes and returns the original list" do
       node = create_node(['cat'])
@@ -86,13 +90,10 @@ describe List do
     it "takes the data from the nodes in the two lists and returns a list with sorted data" do
       left = List.new(Node.new(5))
       right = List.new(Node.new(2))
-      sorted_array = [2, 5]
+      array = [2, 5]
       merged_list = List.new.merge(left, right)
       i = 0
-      merged_list.each do |node|
-        node.data.should == sorted_array[i]
-        i += 1
-      end
+      merged_list.each &check_data
       i.should == 2
     end
   end
@@ -114,66 +115,51 @@ describe List do
 
     it "sorts a list with two nodes" do
       two_nodes = [4, 2]
-      sorted_nodes = [2, 4]
+      array = [2, 4]
       list = List.new(create_node(two_nodes))
       sorted_list = list.sort
       i = 0
-      sorted_list.each do |node|
-        node.data.should == sorted_nodes[i]
-        i += 1
-      end
+      sorted_list.each &check_data
       i.should == 2
     end
 
     it "sorts a list with 3 nodes" do
       three_nodes = [6, 4, 2]
-      sorted_nodes = [2, 4, 6]
+      array = [2, 4, 6]
       list = List.new(create_node(three_nodes))
       sorted_list = list.sort
       i = 0
-      sorted_list.each do |node|
-        node.data.should == sorted_nodes[i]
-        i += 1
-      end
+      sorted_list.each &check_data
       i.should == 3
     end
 
     it "sorts a list with 4 nodes" do
       four_nodes = [45, 101, 3, 76]
-      sorted_nodes = [3, 45, 76, 101]
+      array = [3, 45, 76, 101]
       list = List.new(create_node(four_nodes))
       sorted_list = list.sort
       i = 0
-      sorted_list.each do |node|
-        node.data.should == sorted_nodes[i]
-        i += 1
-      end
+      sorted_list.each &check_data
       i.should == 4
     end
 
     it "sorts a list with 5 nodes" do
       five_nodes = [78, 99, 2, 8, 5]
-      sorted_nodes = [2, 5, 8, 78, 99]
+      array = [2, 5, 8, 78, 99]
       list = List.new(create_node(five_nodes))
       sorted_list = list.sort
       i = 0
-      sorted_list.each do |node|
-        node.data.should == sorted_nodes[i]
-        i += 1
-      end
+      sorted_list.each &check_data
       i.should == 5
     end
 
     it "sorts a list with 13 nodes" do
       thirteen_nodes = [9, 99, 555, 44, 5, 103, 102, 104, 78, 101, 45, 67, 34]
-      sorted_nodes = [5, 9, 34, 44, 45, 67, 78, 99, 101, 102, 103, 104, 555]
+      array = [5, 9, 34, 44, 45, 67, 78, 99, 101, 102, 103, 104, 555]
       list = List.new(create_node(thirteen_nodes))
       sorted_list = list.sort
       i = 0
-      sorted_list.each do |node|
-        node.data.should == sorted_nodes[i]
-        i += 1
-      end
+      sorted_list.each &check_data
       i.should == 13
     end
   end
