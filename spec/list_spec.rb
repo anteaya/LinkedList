@@ -3,10 +3,6 @@ require File.join(File.dirname(__FILE__), 'spec_helper')
 describe List do
   include SpecHelper
 
-  array = []
-  i = 0
-  check_data = lambda {|x| x.data.should == array[i]; i += 1} 
-  
   context "#new" do
     it "initialzes" do
       list = List.new
@@ -37,9 +33,7 @@ describe List do
    array = %w/cherimoya avocado soursop persimmion citron/
    list = List.new(create_node(array))
    before_id = list.object_id
-   i = 0
-   list.each &check_data 
-   i.should == 5
+   check_data(array, list)  
    list.object_id.should == before_id
   end
 
@@ -90,13 +84,11 @@ describe List do
     it "duplicates a list and returns a smaller version, beginning with a specific location in the list" do
       array = %w/carrot tomato celery spinach/
       node = create_node(array)
-      list = List.new(Node.new('eggplant', Node.new('beans', Node.new('peas', Node.new('potato', node)))))
-      before_id = list.object_id
-      reduced_list = list.reduce(5)
-      i = 0
-      reduced_list.each &check_data
-      i.should == 4
-      reduced_list.object_id.should_not == before_id
+      original_list = List.new(Node.new('eggplant', Node.new('beans', Node.new('peas', Node.new('potato', node)))))
+      before_id = original_list.object_id
+      list = original_list.reduce(5)
+      check_data(array, list)
+      list.object_id.should_not == before_id
     end
 
     it "throws an error is argument is not an integer or if integer doesn't correspond to a node in the list" do
@@ -141,25 +133,23 @@ describe List do
     end
 
     it "removes the node at the end of the list" do
-      array = %w/almond walnut peanut pecan hazelnut/  
-      list = List.new(create_node(array))
+      nuts = %w/almond walnut peanut pecan hazelnut/
+      array = %w/almond walnut peanut pecan/
+      list = List.new(create_node(nuts))
       list.remove_end!
-      i = 0
-      list.each &check_data
-      i.should == 4
+      check_data(array, list)
     end
 
   end
 
   context "#truncate_to_end" do
     it "takes a list with a location argument, duplicates the list, removes the remaining nodes and returns the duplicate list" do
-      array = %w/red orange yellow green blue indigo violet/
-      list = List.new(create_node(array))
+      colours = %w/red orange yellow green blue indigo violet/
+      array = %w/red orange yellow/
+      list = List.new(create_node(colours))
       before_id = list.object_id
       returned_list = list.truncate_to_end(3)
-      i = 0
-      list.each &check_data
-      i.should == 3
+      check_data(array, list)
       returned_list.object_id.should_not == before_id
     end
   end

@@ -14,8 +14,10 @@ module SpecHelper
     nodes
   end
   
-  array = []
-  i = 0
-  check_data = lambda {|x| x.data.should == array[i]; i += 1}
+  def check_data(array, list)
+    i = 0
+    list.each {|x| x.data.should == array[i]; i += 1}
+    i.should == array.length
+  end
 
 end
